@@ -1,0 +1,5 @@
+int main() {
+    string a = "a\"bc";
+    string b = "abc";
+    string c = "\";
+}
