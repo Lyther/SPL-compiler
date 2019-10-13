@@ -3,12 +3,14 @@
 	#define EXIT_FAIL -1
 	#include "syntax.tab.h"
 %}
+NESTED_COMMENT \/\*([^\*]|(\*+[^\*\/]))*\/\*([^\*]|(\*+[^\*\/]))*\*+\/([^\*]|(\*+[^\*\/]))*\*+\/
+COMMENT (\/\*([^*]|(\*+[^*\/]))*\*+\/)|(\/\/.*)
 INT ([0-9]+)|(0x[0-9A-Fa-f]+)|(0[0-7]+)
 FLOAT ([0-9]+\.[0-9]+)|([0-9]+(\.[0-9])?[fF])
 CHAR ('.')|('\\x[0-9A-Fa-f]{2}')
-STRING \"(\\.|[^\n"\\])*\"
-TYPE (int)|(float)|(char)|(string)
 STRUCT struct
+STRING \"(\\.|[^\n"\\])*\"
+TYPE (int)|(float)|(char)|(string)|(struct)
 IF if
 ELSE else
 WHILE while
@@ -36,17 +38,17 @@ LB \[
 RB \]
 LC \{
 RC \}
-COMMENT (\/\*([^*]|(\*+[^*\/]))*\*+\/)|(\/\/.*)
 WHITESPACE [ \t\r\n]+
 ID [_A-Za-z][_A-Za-z0-9]*
 %%
+{NESTED_COMMENT} { printf("Error type A at Line %d: syntax error\n", yylineno); }
 {COMMENT} {}
 {INT} { printf("INT %s\n", yytext); }
 {FLOAT} { printf("FLOAT %s\n", yytext); }
 {CHAR} { printf("CHAR %s\n", yytext); }
+{STRUCT} { printf("STRUCT %s\n", yytext); }
 {STRING} { printf("STRING %s\n", yytext); }
 {TYPE} { printf("TYPE %s\n", yytext); }
-{STRUCT} { printf("STRUCT %s\n", yytext); }
 {IF} { printf("IF\n"); }
 {ELSE} { printf("ELSE\n"); }
 {WHILE} { printf("WHILE\n"); }

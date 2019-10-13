@@ -1,10 +1,16 @@
 CC=gcc
 FLEX=flex
-test:
+BISON=bison
+flex:
 	$(FLEX) tlex.l
-	$(CC) lex.yy.c -lfl -o test.out
+	$(CC) lex.yy.c -lfl -o ./bin/splc
 main:
 	$(FLEX) lex.l
-	$(CC) lex.yy.c -lfl -o main.out
+	$(BISON) -d syntax.y
+	$(CC) -w syntax.tab.c AST.c -lfl -o ./bin/splc
+debug:
+	$(FLEX) lex.l
+	$(BISON) -d -t -v syntax.y
+	$(CC) syntax.tab.c AST.c -lfl -o ./bin/splc -DDEBUG
 clean:
-	rm -rf ./lex.yy.c ./test.out ./main.out
+	rm -rf ./lex.yy.c ./bin/splc ./syntax.tab.c ./syntax.tab.h ./syntax.output
