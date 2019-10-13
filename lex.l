@@ -79,5 +79,5 @@ ID [_A-Za-z][_A-Za-z0-9]*
 {RC} { yylval.tr = new_node("RC", NULL, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return RC; }
 {ID} { yylval.tr = new_node("ID", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ID; }
 {WHITESPACE} ;
-. { printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext); exit(-1); }
+. { printf("Error type A at Line %d: unknown lexeme %s\n", yylineno, yytext); return ERR; }
 %%
