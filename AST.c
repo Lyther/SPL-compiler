@@ -35,8 +35,8 @@ void print_tree(struct node* tree, int indent) {
     // printf("Tree node type %s, value %s\n", tree->type, tree->value);
 	if (tree == NULL) { printf("Nullpointer, exit.\n"); return; }
 	for (int i = 0; i < indent; ++i)	printf("  ");
-	if (strcmp(tree->type, "INT") == 0)	printf("INT: %d\n", atoi(tree->value));
-	else if (strcmp(tree->type, "FLOAT") == 0)	printf("FLOAT: %f\n", atof(tree->value));
+	if (strcmp(tree->type, "INT") == 0)	printf("INT: %s\n", tree->value);
+	else if (strcmp(tree->type, "FLOAT") == 0)	printf("FLOAT: %s\n", tree->value);
 	else if (strcmp(tree->type, "CHAR") == 0)	printf("CHAR: %s\n", tree->value);
 	else if (strcmp(tree->type, "STRING") == 0)	printf("STRING: %s\n", tree->value);
 	else if (strcmp(tree->type, "STRUCT") == 0)	printf("STRUCT: %s\n", tree->value);
