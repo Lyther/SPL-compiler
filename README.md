@@ -4,7 +4,7 @@
 Usage:
 
 Makefile:
-1. make test
+1. make flex
 	Only generate a lexical analyzer, and transfer source code into tokens.
 2. make main
 	Compile the whole program, generate parser to parse syntax tree.
