@@ -1,0 +1,4 @@
+"D:\Program Files\JetBrains\apps\CLion\ch-0\192.6262.62\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" F:\Documents\Program\Compiler\SPL-compiler
+-- Configuring done
+-- Generating done
+-- Build files have been written to: F:/Documents/Program/Compiler/SPL-compiler/cmake-build-debug

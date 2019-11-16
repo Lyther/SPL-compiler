@@ -1,0 +1,3 @@
+Error type A at Line 4: unknown lexeme $
+Error type B at Line 4: semi ';' is expected
+Parsing failed!

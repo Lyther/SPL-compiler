@@ -1,0 +1,26 @@
+TYPE int
+ID test_1_o02
+LP
+RP
+LC
+TYPE int
+ID dec_int
+ASSIGN
+INT 323
+SEMI
+TYPE int
+ID hex_int
+ASSIGN
+INT 0xFFF
+SEMI
+TYPE char
+ID ch
+ASSIGN
+CHAR '\xC0'
+SEMI
+RETURN
+ID hex_int
+MINUS
+ID dec_int
+SEMI
+RC
