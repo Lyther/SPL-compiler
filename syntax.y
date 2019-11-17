@@ -7,7 +7,7 @@
 	int errors = 0;
 
 	void yyerror(const char* s);
-	void printerr(const char* message);
+	void printerr(int line, const char* message);
 %}
 
 %union {
@@ -27,7 +27,7 @@
 %type <tr> Def DecList Dec Exp Args
 
 %nonassoc LP RP LB RB LC RC
-%nonassoc ELSE SEMI
+%nonassoc ELSE
 %left DOT
 %right ASSIGN
 %left LT GT LE GE NE EQ
@@ -45,7 +45,8 @@ ExtDefList: ExtDef ExtDefList { $$ = new_node("ExtDefList", NULL, $1->lineno, $1
 ExtDef: Specifier ExtDecList SEMI { $$ = new_node("ExtDef", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| Specifier SEMI { $$ = new_node("ExtDef", NULL, $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); }
 	| Specifier FunDec CompSt { $$ = new_node("ExtDef", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
-	| Specifier error { $$ = new_node("ERR", "semi error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing semicolon ';'"); };
+	| Specifier ExtDecList { $$ = new_node("ERR", "semi error", $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); printerr($1->lineno, "Missing semicolon ';'"); }
+	| Specifier { $$ = new_node("ERR", "semi error", $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); printerr($1->lineno, "Missing semicolon ';'"); };
 ExtDecList: VarDec { $$ = new_node("ExtDecList", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| VarDec COMMA ExtDecList { $$ = new_node("ExtDecList", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); };
 Specifier: TYPE { $$ = new_node("Specifier", NULL, yylineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
@@ -56,7 +57,7 @@ VarDec: ID { $$ = new_node("VarDec", NULL, yylineno, $1, NULL, NULL, NULL, NULL,
 	| VarDec LB INT RB { $$ = new_node("VarDec", NULL, $1->lineno, $1, $2, $3, $4, NULL, NULL, NULL); };
 FunDec: ID LP VarList RP { $$ = new_node("FunDec", NULL, $1->lineno, $1, $2, $3, $4, NULL, NULL, NULL); }
 	| ID LP RP { $$ = new_node("FunDec", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
-	| ID LP error { $$ = new_node("ERR", "parenthesis error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing parenthesis ')'"); };
+	| ID LP { $$ = new_node("ERR", "parenthesis error", $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); printerr($1->lineno, "Missing parenthesis ')'"); };
 VarList: ParamDec COMMA VarList { $$ = new_node("VarList", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| ParamDec { $$ = new_node("VarList", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); };
 ParamDec: Specifier VarDec { $$ = new_node("ParamDec", NULL, $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); };
@@ -70,18 +71,18 @@ Matched_Stmt: IF LP Exp RP Matched_Stmt ELSE Matched_Stmt { $$ = new_node("Match
 	| CompSt { $$ = new_node("Matched_Stmt", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| RETURN Exp SEMI { $$ = new_node("Matched_Stmt", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| WHILE LP Exp RP Stmt { $$ = new_node("Matched_Stmt", NULL, $1->lineno, $1, $2, $3, $4, $5, NULL, NULL); }
-	| Exp error { $$ = new_node("ERR", "semi error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing semicolon ';'"); }
-	| RETURN Exp error { $$ = new_node("ERR", "semi error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing semicolon ';'"); };
-	| IF LP Exp Matched_Stmt ELSE Matched_Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing parenthesis ')'"); }
-	| WHILE LP Exp Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing parenthesis ')'"); };
+	| Exp { $$ = new_node("ERR", "semi error", $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); printerr($1->lineno, "Missing semicolon ';'"); }
+	| RETURN Exp { $$ = new_node("ERR", "semi error", $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); printerr($1->lineno, "Missing semicolon ';'"); };
+	| IF LP Exp Matched_Stmt ELSE Matched_Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, $1, $2, $3, $4, $5, $6, NULL); printerr($1->lineno, "Missing parenthesis ')'"); }
+	| WHILE LP Exp Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, $1, $2, $3, $4, NULL, NULL, NULL); printerr($1->lineno, "Missing parenthesis ')'"); };
 Open_Stmt: IF LP Exp RP Stmt { $$ = new_node("Open_Stmt", NULL, $1->lineno, $1, $2, $3, $4, $5, NULL, NULL); }
 	| IF LP Exp RP Matched_Stmt ELSE Open_Stmt { $$ = new_node("Open_Stmt", NULL, $1->lineno, $1, $2, $3, $4, $5, $6, $7); }
-	| IF LP Exp Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing parenthesis ')'"); }
-	| IF LP Exp Matched_Stmt ELSE Open_Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing parenthesis ')'"); };
+	| IF LP Exp Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, $1, $2, $3, $4, NULL, NULL, NULL); printerr($1->lineno, "Missing parenthesis ')'"); }
+	| IF LP Exp Matched_Stmt ELSE Open_Stmt { $$ = new_node("ERR", "parenthesis error", $1->lineno, $1, $2, $3, $4, $5, $6, NULL); printerr($1->lineno, "Missing parenthesis ')'"); };
 DefList: Def DefList { $$ = new_node("DefList", NULL, $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); }
 	| { $$ = new_node("Empty", NULL, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); };
 Def: Specifier DecList SEMI { $$ = new_node("Def", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
-	| Specifier DecList { $$ = new_node("ERR", "semi error", $1->lineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); printerr("Missing semicolon ';'"); };
+	| Specifier DecList { $$ = new_node("ERR", "semi error", $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); printerr($1->lineno, "Missing semicolon ';'"); };
 DecList: Dec { $$ = new_node("DecList", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| Dec COMMA DecList { $$ = new_node("DecList", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); };
 Dec: VarDec { $$ = new_node("Dec", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
@@ -99,6 +100,7 @@ Exp: Exp ASSIGN Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, N
 	| Exp MINUS Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| Exp MUL Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| Exp DIV Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
+	| Exp ERR Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| LP Exp RP { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| MINUS Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); }
 	| NOT Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, NULL, NULL, NULL, NULL, NULL); }
@@ -110,7 +112,8 @@ Exp: Exp ASSIGN Exp { $$ = new_node("Exp", NULL, $1->lineno, $1, $2, $3, NULL, N
 	| INT { $$ = new_node("Exp", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| FLOAT { $$ = new_node("Exp", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
 	| CHAR { $$ = new_node("Exp", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
-	| STRING { $$ = new_node("Exp", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); };
+	| STRING { $$ = new_node("Exp", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); }
+	| ERR { $$ = new_node("Exp", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); };
 Args: Exp COMMA Args { $$ = new_node("Args", NULL, $1->lineno, $1, $2, $3, NULL, NULL, NULL, NULL); }
 	| Exp { $$ = new_node("Args", NULL, $1->lineno, $1, NULL, NULL, NULL, NULL, NULL, NULL); };
 
@@ -121,8 +124,8 @@ void yyerror(const char *s) {
 //	 errors++;
 }
 
-void printerr(const char* message) {
-	printf("Error type B at Line %d: %s\n", yylineno, message);
+void printerr(int line, const char* message) {
+	printf("Error type B at Line %d: %s\n", line, message);
 	errors++;
 }
 
@@ -134,10 +137,9 @@ int main(int argc, char **argv) {
 		char file[80];
 		strcat(file, buffer);
 		strcat(file, ".out");
-		printf("print redirect to %s\n", file);
+		printf("%s\n", file);
 		freopen(file, "w", stdout);
-		if (!yyparse())	return 0;
-		else	return -1;
+		yyparse();
 		fclose(yyin);
 		return 0;
 	} else if (argc < 2) {

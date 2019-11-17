@@ -34,42 +34,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="95b83c16-3390-47b5-be67-1e97cd30a15a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/AST.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AST.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/splc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lex.l" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/report/11712606-project1.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/syntax.y" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_o01.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_o01.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_o02.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_o02.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_o03.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_o03.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r01.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r01.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r02.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r02.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r03.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r03.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r04.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r04.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r05.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r05.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r06.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r06.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r07.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r07.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r08.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r08.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r09.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r09.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r10.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_1_r10.spl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tlex.l" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex.l" beforeDir="false" afterPath="$PROJECT_DIR$/lex.l" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/syntax.y" beforeDir="false" afterPath="$PROJECT_DIR$/syntax.y" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tlex.l" beforeDir="false" afterPath="$PROJECT_DIR$/tlex.l" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -131,7 +99,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1573890270560</updated>
-      <workItem from="1573890271878" duration="20478000" />
+      <workItem from="1573890271878" duration="23687000" />
     </task>
     <servers />
   </component>

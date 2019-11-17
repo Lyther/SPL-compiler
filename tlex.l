@@ -2,11 +2,14 @@
 	#define EXIT_OK 0
 	#define EXIT_FAIL -1
 %}
+
 NESTED_COMMENT \/\*([^\*]|(\*+[^\*\/]))*\/\*([^\*]|(\*+[^\*\/]))*\*+\/([^\*]|(\*+[^\*\/]))*\*+\/
 COMMENT (\/\*([^*]|(\*+[^*\/]))*\*+\/)|(\/\/.*)
 INT ([0-9]+)|(0x[0-9A-Fa-f]+)|(0[0-7]+)
+W_INT [+-]?0x[0-9A-Za-z]+
 FLOAT ([0-9]+\.[0-9]+)|([0-9]+(\.[0-9])?[fF])
 CHAR ('.')|('\\x[0-9A-Fa-f]{2}')
+W_CHAR '\\x[0-9A-Za-z]*'
 STRUCT struct
 STRING \"(\\.|[^\n"\\])*\"
 TYPE (int)|(float)|(char)|(string)|(struct)
@@ -39,12 +42,17 @@ LC \{
 RC \}
 WHITESPACE [ \t\r\n]+
 ID [_A-Za-z][_A-Za-z0-9]*
+W_ID [_A-Za-z0-9]*
+
 %%
+
 {NESTED_COMMENT} { printf("Error type A at Line %d: syntax error\n", yylineno); }
 {COMMENT} {}
 {INT} { printf("INT %s\n", yytext); }
+{W_INT} { printf("Error type A at Line %d: Mysterious lexeme %s\n", yylineno, yytext); }
 {FLOAT} { printf("FLOAT %s\n", yytext); }
 {CHAR} { printf("CHAR %s\n", yytext); }
+{W_CHAR} { printf("Error type A at Line %d: Mysterious lexeme %s\n", yylineno, yytext); }
 {STRUCT} { printf("STRUCT %s\n", yytext); }
 {STRING} { printf("STRING %s\n", yytext); }
 {TYPE} { printf("TYPE %s\n", yytext); }
@@ -76,8 +84,9 @@ ID [_A-Za-z][_A-Za-z0-9]*
 {LC} { printf("LC\n"); }
 {RC} { printf("RC\n"); }
 {ID} { printf("ID %s\n", yytext); }
+{W_ID} { printf("Error type A at Line %d: Mysterious lexeme %s\n", yylineno, yytext); }
 {WHITESPACE} {}
-. { printf("Error type A at Line %d: Unknown characters \'%s\'\n", yylineno, yytext); }
+. { printf("Error type A at Line %d: Mysterious lexeme %s\n", yylineno, yytext); }
 %%
 int main(int argc, char **argv) {
 	if (argc == 2) {

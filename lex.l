@@ -48,16 +48,17 @@ LC \{
 RC \}
 WHITESPACE [ \t\r\n]+
 ID [_A-Za-z][_A-Za-z0-9]*
+W_ID [_A-Za-z0-9]*
 
 %%
 
-{NESTED_COMMENT} { printf("Error type A at Line %d: syntax error\n", yylineno); return ERR; };
+{NESTED_COMMENT} { printf("Error type A at Line %d: syntax error\n", yylineno); yylval.tr = new_node("ERR", "lexeme error", yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ERR; };
 {COMMENT} {};
 {INT} { yylval.tr = new_node("INT", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return INT; };
-{W_INT} { print_error(yylineno, yytext); return ERR; };
+{W_INT} { print_error(yylineno, yytext); yylval.tr = new_node("ERR", "lexeme error", yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ERR; };
 {FLOAT} { yylval.tr = new_node("FLOAT", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return FLOAT; };
 {CHAR} { yylval.tr = new_node("CHAR", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return CHAR; };
-{W_CHAR} { print_error(yylineno, yytext); return ERR; };
+{W_CHAR} { print_error(yylineno, yytext); yylval.tr = new_node("ERR", "lexeme error", yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ERR; };
 {STRUCT} { yylval.tr = new_node("STRUCT", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return STRUCT; };
 {STRING} { yylval.tr = new_node("STRING", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return STRING; };
 {TYPE} { yylval.tr = new_node("TYPE", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return TYPE; };
@@ -89,8 +90,9 @@ ID [_A-Za-z][_A-Za-z0-9]*
 {LC} { yylval.tr = new_node("LC", NULL, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return LC; };
 {RC} { yylval.tr = new_node("RC", NULL, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return RC; };
 {ID} { yylval.tr = new_node("ID", yytext, yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ID; };
+{W_ID} { print_error(yylineno, yytext); yylval.tr = new_node("ERR", "lexeme error", yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ERR; };
 {WHITESPACE} {};
-. { print_error(yylineno, yytext); return ERR; };
+. { print_error(yylineno, yytext); yylval.tr = new_node("ERR", "lexeme error", yylineno, NULL, NULL, NULL, NULL, NULL, NULL, NULL); return ERR; };
 
 %%
 
