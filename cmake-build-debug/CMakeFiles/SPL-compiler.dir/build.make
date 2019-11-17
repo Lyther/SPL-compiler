@@ -69,19 +69,64 @@ CMakeFiles/SPL-compiler.dir/AST.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPL-compiler.dir/AST.c.s"
 	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S F:\Documents\Program\Compiler\SPL-compiler\AST.c -o CMakeFiles\SPL-compiler.dir\AST.c.s
 
+CMakeFiles/SPL-compiler.dir/parser.c.obj: CMakeFiles/SPL-compiler.dir/flags.make
+CMakeFiles/SPL-compiler.dir/parser.c.obj: ../parser.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=F:\Documents\Program\Compiler\SPL-compiler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/SPL-compiler.dir/parser.c.obj"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\SPL-compiler.dir\parser.c.obj   -c F:\Documents\Program\Compiler\SPL-compiler\parser.c
+
+CMakeFiles/SPL-compiler.dir/parser.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPL-compiler.dir/parser.c.i"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E F:\Documents\Program\Compiler\SPL-compiler\parser.c > CMakeFiles\SPL-compiler.dir\parser.c.i
+
+CMakeFiles/SPL-compiler.dir/parser.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPL-compiler.dir/parser.c.s"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S F:\Documents\Program\Compiler\SPL-compiler\parser.c -o CMakeFiles\SPL-compiler.dir\parser.c.s
+
+CMakeFiles/SPL-compiler.dir/symbol.c.obj: CMakeFiles/SPL-compiler.dir/flags.make
+CMakeFiles/SPL-compiler.dir/symbol.c.obj: ../symbol.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=F:\Documents\Program\Compiler\SPL-compiler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SPL-compiler.dir/symbol.c.obj"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\SPL-compiler.dir\symbol.c.obj   -c F:\Documents\Program\Compiler\SPL-compiler\symbol.c
+
+CMakeFiles/SPL-compiler.dir/symbol.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPL-compiler.dir/symbol.c.i"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E F:\Documents\Program\Compiler\SPL-compiler\symbol.c > CMakeFiles\SPL-compiler.dir\symbol.c.i
+
+CMakeFiles/SPL-compiler.dir/symbol.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPL-compiler.dir/symbol.c.s"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S F:\Documents\Program\Compiler\SPL-compiler\symbol.c -o CMakeFiles\SPL-compiler.dir\symbol.c.s
+
+CMakeFiles/SPL-compiler.dir/tools.c.obj: CMakeFiles/SPL-compiler.dir/flags.make
+CMakeFiles/SPL-compiler.dir/tools.c.obj: ../tools.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=F:\Documents\Program\Compiler\SPL-compiler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SPL-compiler.dir/tools.c.obj"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\SPL-compiler.dir\tools.c.obj   -c F:\Documents\Program\Compiler\SPL-compiler\tools.c
+
+CMakeFiles/SPL-compiler.dir/tools.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPL-compiler.dir/tools.c.i"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E F:\Documents\Program\Compiler\SPL-compiler\tools.c > CMakeFiles\SPL-compiler.dir\tools.c.i
+
+CMakeFiles/SPL-compiler.dir/tools.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPL-compiler.dir/tools.c.s"
+	"D:\Program Files (x86)\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S F:\Documents\Program\Compiler\SPL-compiler\tools.c -o CMakeFiles\SPL-compiler.dir\tools.c.s
+
 # Object files for target SPL-compiler
 SPL__compiler_OBJECTS = \
-"CMakeFiles/SPL-compiler.dir/AST.c.obj"
+"CMakeFiles/SPL-compiler.dir/AST.c.obj" \
+"CMakeFiles/SPL-compiler.dir/parser.c.obj" \
+"CMakeFiles/SPL-compiler.dir/symbol.c.obj" \
+"CMakeFiles/SPL-compiler.dir/tools.c.obj"
 
 # External object files for target SPL-compiler
 SPL__compiler_EXTERNAL_OBJECTS =
 
 SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/AST.c.obj
+SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/parser.c.obj
+SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/symbol.c.obj
+SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/tools.c.obj
 SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/build.make
 SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/linklibs.rsp
 SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/objects1.rsp
 SPL-compiler.exe: CMakeFiles/SPL-compiler.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=F:\Documents\Program\Compiler\SPL-compiler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable SPL-compiler.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=F:\Documents\Program\Compiler\SPL-compiler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable SPL-compiler.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\SPL-compiler.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

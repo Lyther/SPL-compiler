@@ -2,14 +2,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #define INT_MAX 2147483647
 
 char* leaf[] = {"IF", "ELSE", "WHILE", "RETURN", "DOT", "SEMI", "COMMA", "ASSIGN", 
     "LT", "GT", "LE", "GE", "NE", "EQ", "PLUS", "MINUS", "MUL", "DIV", "AND", 
     "OR", "NOT", "LP", "RP", "LB", "RB", "LC", "RC"};
 
-node* new_node(char* type, char* value, int lineno, node* t1, node* t2, node* t3, node* t4, node* t5, node* t6, node* t7) {
+node* new_node(char* type, char* value, int line, node* t1, node* t2, node* t3, node* t4, node* t5, node* t6, node* t7) {
 	node* tree = (node*)malloc(sizeof(node));
     if (strcmp(type, "Empty") == 0) return NULL;
 	else    tree->type = type;
@@ -18,8 +17,8 @@ node* new_node(char* type, char* value, int lineno, node* t1, node* t2, node* t3
         strcpy(buffer, yytext);
         tree->value = buffer;
     } else  tree->value = value;
-    tree->lineno = lineno;
-    // printf("New node type : %s, value: %s, line: %d\n", tree->type, tree->value, tree->lineno);
+    tree->line = line;
+    // printf("New node type : %s, value: %s, line: %d\n", tree->type, tree->value, tree->line);
 	tree->t1 = t1;
 	tree->t2 = t2;
 	tree->t3 = t3;
@@ -49,9 +48,9 @@ void print_tree(struct node* tree, int indent) {
                 return;
             }
         }
-        printf("%s (%d)\n", tree->type, tree->lineno);
+        printf("%s (%d)\n", tree->type, tree->line);
     }
-    // printf("Node has been printed, going next.\n");
+    // printf("List has been printed, going next.\n");
 	if (tree->t1 != NULL)   print_tree(tree->t1, indent+1);
 	if (tree->t2 != NULL)   print_tree(tree->t2, indent+1);
 	if (tree->t3 != NULL)   print_tree(tree->t3, indent+1);

@@ -86,6 +86,30 @@
 		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/AST.h">
 			<Option target="SPL-compiler"/>
 		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/parser.c">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/parser.h">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/statement.h">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/symbol.c">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/symbol.h">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/tools.c">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/tools.h">
+			<Option target="SPL-compiler"/>
+		</Unit>
+		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/uthash.h">
+			<Option target="SPL-compiler"/>
+		</Unit>
 		<Unit filename="F:/Documents/Program/Compiler/SPL-compiler/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

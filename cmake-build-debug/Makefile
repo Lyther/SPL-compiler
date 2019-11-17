@@ -149,6 +149,87 @@ AST.c.s:
 	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/AST.c.s
 .PHONY : AST.c.s
 
+parser.obj: parser.c.obj
+
+.PHONY : parser.obj
+
+# target to build an object file
+parser.c.obj:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/parser.c.obj
+.PHONY : parser.c.obj
+
+parser.i: parser.c.i
+
+.PHONY : parser.i
+
+# target to preprocess a source file
+parser.c.i:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/parser.c.i
+.PHONY : parser.c.i
+
+parser.s: parser.c.s
+
+.PHONY : parser.s
+
+# target to generate assembly for a file
+parser.c.s:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/parser.c.s
+.PHONY : parser.c.s
+
+symbol.obj: symbol.c.obj
+
+.PHONY : symbol.obj
+
+# target to build an object file
+symbol.c.obj:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/symbol.c.obj
+.PHONY : symbol.c.obj
+
+symbol.i: symbol.c.i
+
+.PHONY : symbol.i
+
+# target to preprocess a source file
+symbol.c.i:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/symbol.c.i
+.PHONY : symbol.c.i
+
+symbol.s: symbol.c.s
+
+.PHONY : symbol.s
+
+# target to generate assembly for a file
+symbol.c.s:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/symbol.c.s
+.PHONY : symbol.c.s
+
+tools.obj: tools.c.obj
+
+.PHONY : tools.obj
+
+# target to build an object file
+tools.c.obj:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/tools.c.obj
+.PHONY : tools.c.obj
+
+tools.i: tools.c.i
+
+.PHONY : tools.i
+
+# target to preprocess a source file
+tools.c.i:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/tools.c.i
+.PHONY : tools.c.i
+
+tools.s: tools.c.s
+
+.PHONY : tools.s
+
+# target to generate assembly for a file
+tools.c.s:
+	$(MAKE) -f CMakeFiles\SPL-compiler.dir\build.make CMakeFiles/SPL-compiler.dir/tools.c.s
+.PHONY : tools.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -161,6 +242,15 @@ help:
 	@echo ... AST.obj
 	@echo ... AST.i
 	@echo ... AST.s
+	@echo ... parser.obj
+	@echo ... parser.i
+	@echo ... parser.s
+	@echo ... symbol.obj
+	@echo ... symbol.i
+	@echo ... symbol.s
+	@echo ... tools.obj
+	@echo ... tools.i
+	@echo ... tools.s
 .PHONY : help
 
 

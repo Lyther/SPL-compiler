@@ -1,0 +1,3 @@
+Error type 7 at Line 3: unmatching operands
+Error type 4 at Line 7: function is redefined
+Error type 11 at Line 15: applying function invocation operator on non-function names

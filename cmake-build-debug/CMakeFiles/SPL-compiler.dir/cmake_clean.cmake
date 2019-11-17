@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/SPL-compiler.dir/AST.c.obj"
+  "CMakeFiles/SPL-compiler.dir/parser.c.obj"
+  "CMakeFiles/SPL-compiler.dir/symbol.c.obj"
+  "CMakeFiles/SPL-compiler.dir/tools.c.obj"
   "SPL-compiler.pdb"
   "SPL-compiler.exe"
   "SPL-compiler.exe.manifest"

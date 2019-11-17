@@ -8,6 +8,10 @@ main:
 	$(FLEX) lex.l
 	$(BISON) -d syntax.y
 	$(CC) -w syntax.tab.c AST.c -lfl -o ./bin/splc
+splc: lex.l syntax.y AST.c AST.h parser.c parser.h statement.h symbol.c symbol.h tools.c tools.h
+	$(FLEX) lex.l
+	$(BISON) -d syntax.y
+	$(CC) -w syntax.tab.c AST.c symbol.c parser.c tools.c -lfl -o ./bin/splc
 debug:
 	$(FLEX) lex.l
 	$(BISON) -d -t -v syntax.y
