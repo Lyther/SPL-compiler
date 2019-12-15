@@ -1,45 +1,86 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef _PRASER_H_
+#define _PRASER_H_
+#include "stmt.h"
+#include "tree.h"
+#include "ir.h"
+#include <vector>
+#include <set>
 
-#include "statement.h"
-#include "AST.h"
 
-void parser_program(node *root);
+using namespace std;
 
-void parser_ext_def_list(node *root);
+class Praser {
+public:
 
-void parser_ext_def(node *root);
+	Praser(gramTree*);	//���캯��
+	~Praser();	//��������
 
-void parser_comp_st(node *root, type *t);
+private:
+	map<string, funcNode> funcPool;			//������
+	vector<Block> blockStack;				//ά����ջ
+	InnerCode innerCode;					//�м�������ɹ���
+	//set<string> build_in_function;
 
-void parser_stmt(node *root, type *t);
+	struct gramTree* root;
 
-void parser_stmt_list(node *root, type *t);
+	void praserInit();
+	void praserGramTree(struct gramTree* node);
 
-void parser_ext_dec_list(node *root, type *t);
+	
+	struct gramTree* praser_declaration(struct gramTree* node);		//����praser_declaration�Ľڵ�
+	void praser_init_declarator_list(string, struct gramTree*);
+	void praser_init_declarator(string, struct gramTree* );			//����praser_init_declarator�Ľڵ�
 
-type *parser_specifier(node *root);
+	struct gramTree* praser_function_definition(struct gramTree*);
+	void praser_parameter_list(struct gramTree*,string,bool);			//��ȡ�����β��б�
+	void praser_parameter_declaration(struct gramTree*, string,bool);	//��ȡ���������β�
 
-type *parser_exp(node *root);
+	struct gramTree* praser_statement(struct gramTree*);
 
-type *parser_fun_dec(node *root, type *t);
+	void praser_expression_statement(struct gramTree*);
+	varNode praser_expression(struct gramTree*);
 
-statement *parser_def_list(node *root, statement *stmt);
+	void praser_argument_expression_list(struct gramTree*,string);
 
-statement *parser_def(node *root, statement *stmt);
+	void praser_jump_statement(struct gramTree*);
+	void praser_compound_statement(struct gramTree*);
+	void praser_selection_statement(struct gramTree*);
+	void praser_iteration_statement(struct gramTree*);
 
-statement *parser_dec_list(node *root, statement *stmt, type *t);
+	varNode praser_assignment_expression(struct gramTree*);			//��ֵ����ʽ
+	varNode praser_logical_or_expression(struct gramTree*);			//�߼������ʽ
+	varNode praser_logical_and_expression(struct gramTree*);		//�߼������ʽ
+	varNode praser_inclusive_or_expression(struct gramTree*);
+	varNode praser_exclusive_or_expression(struct gramTree*);
+	varNode praser_and_expression(struct gramTree*);
+	varNode praser_equality_expression(struct gramTree*);
+	varNode praser_relational_expression(struct gramTree*);
+	varNode praser_shift_expression(struct gramTree*);
+	varNode praser_additive_expression(struct gramTree*);
+	varNode praser_multiplicative_expression(struct gramTree*);
+	varNode praser_unary_expression(struct gramTree*);
+	varNode praser_postfix_expression(struct gramTree*);
+	varNode praser_primary_expression(struct gramTree*);
 
-statement *parser_dec(node *root, type *t);
 
-statement *parser_var_dec(node *root, type *t);
+	string lookupVar(string name);			//���ر������ͣ��Ҳ�������""
+	bool lookupCurruntVar(string name);		//���ҵ�ǰ���var
+	struct varNode lookupNode(string name);	//���ر����ڵ�
+	string getFuncRType();
+	string getArrayType(string);
+	struct arrayNode getArrayNode(string);
 
-statement *parser_var_list(node *root, statement *stmt);
+	int getBreakBlockNumber();
 
-statement *parser_param_dec(node *root, statement *stmt);
+	struct varNode createTempVar(string name, string type);
 
-void parser_error(node *root, int type, char *message);
+	void error(int line, string error);
 
-int parser_same(type *t1, type *t2);
+	void print_map();
+	void print_code();
+};
 
-#endif
+
+
+
+#endif // !_PRASER_H_

@@ -1,5 +1,0 @@
-Error type 3 at Line 6: variable is redefined in the same scope
-Error type 11 at Line 9: applying function invocation operator on non-function names
-Error type 5 at Line 9: unmatching types on both sides of assignment operator
-Error type 7 at Line 10: unmatching operands
-Error type 5 at Line 15: unmatching types on both sides of assignment operator
