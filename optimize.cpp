@@ -56,7 +56,7 @@ void Optimize::reduceTemp(vector<string>& codelist) {
 			}
 			cp = match.suffix();
 		}
-		if (dup_assign)	continue;
+		if (dup_assign) continue;
 		for (string s : rep) {
 			regex r(s.c_str());
 			auto itr = this->replace_str.find(s);
@@ -67,6 +67,7 @@ void Optimize::reduceTemp(vector<string>& codelist) {
 }
 
 void Optimize::removeUselessVar() {
+	vector<string> new_codelist;
 	map<string, int> time_counter;
 	regex pattern("t[0-9]+");
 	smatch match;
@@ -74,20 +75,19 @@ void Optimize::removeUselessVar() {
 		string str = this->codelist[i];
 		string cp = str;
 		while (regex_search(cp, match, pattern)) {
-			if (time_counter.count(match[0]))	++time_counter[match[0]];
-			else	time_counter.insert({match[0], 1});
+			if (time_counter.count(match[0])) ++time_counter[match[0]];
+			else time_counter.insert({match[0], 1});
 			cp = match.suffix();
 		}
 	}
-	int i = 0;
-	for (vector<string>::iterator it = this->codelist.begin(); it != this->codelist.end(); ++it) {
+	for (int i = 0; i < this->codelist.size(); ++i) {
 		string str = this->codelist[i];
 		if (regex_search(str, match, pattern)) {
 			auto itr = time_counter.find(match[0]);
-			if (itr->second == 1)	this->codelist.erase(it);
-		}
-		++i;
+			if (itr->second != 1) new_codelist.push_back(str);
+		} else new_codelist.push_back(str);
 	}
+	this->codelist = new_codelist;
 }
 
 vector<string> Optimize::getCodeList() {

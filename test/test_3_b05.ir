@@ -1,0 +1,90 @@
+FUNCTION squaRever :
+PARAM v1
+t1 := #0
+v2 := t1
+t2 := #3
+t4 := #4
+t3 := t4 * t2
+DEC array0 t3
+v3 := t1
+t8 := t1 * t4
+t7 := &array0 + t8
+t10 := #100
+t11 := v1 / t10
+*t7 := t11
+t12 := #1
+t14 := t12 * t4
+t13 := &array0 + t14
+t16 := #10
+t17 := v1 / t16
+t21 := t1 * t4
+t20 := &array0 + t21
+t23 := t16 * *t20
+t24 := t17 - t23
+*t13 := t24
+t25 := #2
+t27 := t25 * t4
+t26 := &array0 + t27
+t32 := t1 * t4
+t31 := &array0 + t32
+t34 := t10 * *t31
+t35 := v1 - t34
+t39 := t12 * t4
+t38 := &array0 + t39
+t41 := t16 * *t38
+t42 := t35 - t41
+*t26 := t42
+t45 := t1 * t4
+t44 := &array0 + t45
+t49 := t25 * t4
+t48 := &array0 + t49
+IF *t44 != *t48 GOTO label1
+GOTO label2
+LABEL label1 :
+v2 := t1
+GOTO label3
+LABEL label2 :
+LABEL label4 :
+t53 := #12
+IF v3 < t53 GOTO label5
+GOTO label6
+LABEL label5 :
+t55 := v3 * v3
+t56 := t55 - v1
+IF t56 == t1 GOTO label7
+GOTO label8
+LABEL label7 :
+v2 := t12
+LABEL label8 :
+t61 := v3 + t12
+v3 := t61
+GOTO label4
+LABEL label6 :
+LABEL label3 :
+IF v2 == t12 GOTO label9
+GOTO label10
+LABEL label9 :
+RETURN t12
+GOTO label11
+LABEL label10 :
+RETURN t1
+LABEL label11 :
+FUNCTION main :
+v4 := t10
+LABEL label12 :
+t67 := #150
+IF v4 < t67 GOTO label13
+GOTO label14
+LABEL label13 :
+ARG v4
+t69 := CALL squaRever
+IF t69 == t12 GOTO label15
+GOTO label16
+LABEL label15 :
+WRITE v4
+LABEL label16 :
+t73 := v4 + t12
+v4 := t73
+GOTO label12
+LABEL label14 :
+RETURN t1

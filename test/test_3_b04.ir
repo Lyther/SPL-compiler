@@ -1,0 +1,74 @@
+FUNCTION Josepy :
+PARAM v1
+PARAM v2
+t1 := #100
+t3 := #4
+t2 := t3 * t1
+DEC array0 t2
+t4 := #1
+v3 := t4
+t5 := #0
+v4 := t5
+v5 := t5
+v6 := t5
+LABEL label1 :
+IF v3 <= v1 GOTO label2
+GOTO label3
+LABEL label2 :
+t10 := v3 * t3
+t9 := &array0 + t10
+*t9 := t4
+t14 := v3 + t4
+v3 := t14
+GOTO label1
+LABEL label3 :
+v3 := t4
+LABEL label4 :
+IF v3 <= v1 GOTO label5
+GOTO label6
+LABEL label5 :
+t18 := v3 * t3
+t17 := &array0 + t18
+IF *t17 == t4 GOTO label7
+GOTO label8
+LABEL label7 :
+t23 := v3 * t3
+t22 := &array0 + t23
+t25 := v4 + *t22
+v4 := t25
+IF v4 == v2 GOTO label9
+GOTO label10
+LABEL label9 :
+WRITE v3
+v4 := t5
+t29 := v3 * t3
+t28 := &array0 + t29
+*t28 := t5
+t33 := v5 + t4
+v5 := t33
+LABEL label10 :
+IF v5 == v1 GOTO label11
+GOTO label12
+LABEL label11 :
+v6 := v3
+RETURN t5
+LABEL label12 :
+LABEL label8 :
+IF v3 == v1 GOTO label13
+GOTO label14
+LABEL label13 :
+v3 := t5
+LABEL label14 :
+t39 := v3 + t4
+v3 := t39
+GOTO label4
+LABEL label6 :
+RETURN t5
+FUNCTION main :
+READ t41
+v7 := t41
+READ t42
+v8 := t42
+ARG v8
+ARG v7
+RETURN t5
