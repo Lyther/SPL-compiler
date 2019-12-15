@@ -1,19 +1,18 @@
-#ifndef _INNERCODE_H_
-#define _INNERCODE_H_
+#ifndef _IR_H_
+#define _IR_H_
 
 #include <iostream>
 #include "tree.h"
 #include "stmt.h"
 #include "optimize.h"
 #include<string>
-extern struct gramTree* root;
-
 using namespace std;
+
+extern struct gramTree* root;
 
 class InnerCode {
 private:
 	vector<string> codeList;
-
 public:
 	int tempNum = 1;
 	int varNum = 1;
@@ -34,4 +33,4 @@ public:
 	string getLabelName();
 };
 
-#endif // !_INNERCODE_H_
+#endif

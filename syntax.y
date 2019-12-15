@@ -305,10 +305,9 @@ declaration_list: declaration { $$ = create_tree("declaration_list", 1, $1); }
 
 %%
 
-void yyerror(char const *s)
-{
+void yyerror(char const *s) {
 	fflush(stdout);
-	printf("\n%*s\n%*s\n", column, "^", column, s);
+	printf("Error type A at Line %d:%d: %s\n", yylineno, column, s);
 }
 
 int main(int argc,char* argv[]) {

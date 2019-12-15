@@ -5,23 +5,17 @@
 #include <map>
 using namespace std;
 
-struct Message {
-	int line = -1;
-	int num = 0;
-};
-
 class Optimize {
 private:
 	vector<string> codelist;
-	map<string, Message> tempMessage;
+	map<double, string> constant_pool;
+	map<string, string> replace_str;
 
-	void establishMap(vector<string>&);
-	void dropTrumpTemp(vector<string>&);
-
+	void establishConstantPool(vector<string>&);
+	void reduceTemp(vector<string>&);
 public:
 	Optimize(vector<string>);
 	vector<string> getCodeList();
-
 };
 
 #endif

@@ -1,5 +1,4 @@
 #ifndef _TREE_H_
-
 #define _TREE_H_
 
 #include<cstdio>
@@ -8,21 +7,17 @@
 #include<cstdarg>
 #include<iostream>
 #include<string>
-extern char *yytext;
-extern int yylineno;//提供当前行数信息
 using namespace std;
 
+extern char *yytext;
+extern int yylineno;
 
 struct gramTree {
     string content;
-    //string type;
     string name;
-    int line;       //所在代码行数
+    int line;
     struct gramTree *left;
     struct gramTree *right;
-   /* double double_value;
-    int int_value;
-    string string_value;*/
 };
 
 extern struct gramTree *root;

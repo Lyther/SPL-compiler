@@ -795,7 +795,11 @@ varNode Praser::praser_relational_expression(struct gramTree* relational_exp) {
 			op = "<=";
 		else if (op == "GE")
 			op = ">=";
-		if (op == "GT" || op == "LT" || op == ">=" || op == "<=") {
+		else if (op == "GT")
+			op = ">";
+		else if (op == "LT")
+			op = "<";
+		if (op == ">" || op == "<" || op == ">=" || op == "<=") {
 			varNode node1 = praser_relational_expression(relational_exp->left);
 			varNode node2 = praser_shift_expression(relational_exp->left->right->right);
 			if (node1.type != node2.type) {
@@ -840,6 +844,9 @@ varNode Praser::praser_additive_expression(struct gramTree* additive_exp) {
 		gramTree* mult_exp = additive_exp->left;
 		return praser_multiplicative_expression(mult_exp);
 	} else if (additive_exp->left->right->name == "PLUS" || additive_exp->left->right->name == "MINUS") {
+		string op = additive_exp->left->right->name;
+		if (op == "PLUS")	op = "+";
+		else	op = "-";
 		varNode node1 = praser_additive_expression(additive_exp->left);
 		varNode node2 = praser_multiplicative_expression(additive_exp->left->right->right);
 		if (node1.type != node2.type) {
@@ -849,7 +856,7 @@ varNode Praser::praser_additive_expression(struct gramTree* additive_exp) {
 		++innerCode.tempNum;
 		varNode newnode = createTempVar(tempname, node1.type);
 		blockStack.back().varMap.insert({ tempname,newnode});
-		innerCode.addCode(innerCode.createCodeforVar(tempname, additive_exp->left->right->name, node1, node2));
+		innerCode.addCode(innerCode.createCodeforVar(tempname, op, node1, node2));
 		return newnode;
 	}
 }
@@ -860,17 +867,21 @@ varNode Praser::praser_multiplicative_expression(struct gramTree* mult_exp) {
 		return praser_unary_expression(unary_exp);
 	} else if (mult_exp->left->right->name == "MUL" || mult_exp->left->right->name == "DIV" || 
 		mult_exp->left->right->name == "PERCENT") {
-		varNode node1 = praser_multiplicative_expression(mult_exp->left);
-		varNode node2 = praser_unary_expression(mult_exp->left->right->right);
-		if (node1.type != node2.type) {
-			error(5, mult_exp->left->right->line, "unmatching types on both sides of assignment operator");
-		}
-		string tempname = "t" + inttostr(innerCode.tempNum);
-		++innerCode.tempNum;
-		varNode newNode = createTempVar(tempname, node1.type);
-		blockStack.back().varMap.insert({ tempname,newNode });
-		innerCode.addCode(innerCode.createCodeforVar(tempname, mult_exp->left->right->name,node1,node2));
-		return newNode;
+			string op = mult_exp->left->right->name;
+			if (op == "MUL")	op = "*";
+			else if (op == "DIV")	op = "/";
+			else	op = "%";
+			varNode node1 = praser_multiplicative_expression(mult_exp->left);
+			varNode node2 = praser_unary_expression(mult_exp->left->right->right);
+			if (node1.type != node2.type) {
+				error(5, mult_exp->left->right->line, "unmatching types on both sides of assignment operator");
+			}
+			string tempname = "t" + inttostr(innerCode.tempNum);
+			++innerCode.tempNum;
+			varNode newNode = createTempVar(tempname, node1.type);
+			blockStack.back().varMap.insert({ tempname,newNode });
+			innerCode.addCode(innerCode.createCodeforVar(tempname, op, node1, node2));
+			return newNode;
 	}
 }
 
