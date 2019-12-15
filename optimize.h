@@ -13,6 +13,7 @@ private:
 
 	void establishConstantPool(vector<string>&);
 	void reduceTemp(vector<string>&);
+	void removeUselessVar();
 public:
 	Optimize(vector<string>);
 	vector<string> getCodeList();
