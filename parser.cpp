@@ -106,7 +106,7 @@ void Praser::praser_jump_statement(struct gramTree* node) {
 				error(node->left->right->line, "return type doesn't equal to function return type.");
 			}
 		}
-		else if (node->left->right->name == ";"){//return ;
+		else if (node->left->right->name == "SEMI"){//return ;
 			innerCode.addCode("RETURN");
 			if (funcType != "void") {
 				error(node->left->right->line, "You should return " + blockStack.back().func.rtype);
@@ -128,7 +128,7 @@ varNode Praser::praser_expression(struct gramTree* node) {
 	else if (node->left->name == "assignment_expression") {
 		return praser_assignment_expression(node->left);
 	}
-	if (node->right->name == ",") {
+	if (node->right->name == "COMMA") {
 		return praser_assignment_expression(node->right->right);
 	}
 }
@@ -322,7 +322,7 @@ void Praser::praser_iteration_statement(struct gramTree* node) {
 	else if (node->left->name == "FOR") {
 		if (node->left->right->right->name == "expression_statement") {
 			//FOR '(' expression_statement expression_statement ')'statement
-			if (node->left->right->right->right->right->name == ")") {
+			if (node->left->right->right->right->right->name == "RP") {
 				//����һ���µ�block
 				Block newblock;
 				newblock.canBreak = true;
@@ -442,7 +442,7 @@ void Praser::praser_iteration_statement(struct gramTree* node) {
 		}
 		if (node->left->right->right->name == "declaration") {
 			//FOR '(' declaration expression_statement ')' statement
-			if (node->left->right->right->right->right->name == ")") {
+			if (node->left->right->right->right->right->name == "RP") {
 				//����һ���µ�block
 				Block newblock;
 				newblock.canBreak = true;
@@ -642,7 +642,7 @@ void Praser::praser_parameter_list(struct gramTree* node,string funcName,bool de
 		praser_parameter_declaration(node->left,funcName,definite);
 	}
 
-	if (node->right->name == ",") {
+	if (node->right->name == "COMMA") {
 		praser_parameter_declaration(node->right->right, funcName,definite);
 	}
 }
@@ -681,7 +681,7 @@ struct gramTree* Praser::praser_declaration(struct gramTree *node) {
 	//cout << "at " << node->name << endl;
 	//node = declaration
 	struct gramTree* begin = node->left;	//begin:type_specifier
-	if (begin->right->name == ";")
+	if (begin->right->name == "SEMI")
 		return node->right;
 	
 	string vartype = begin->left->content;
@@ -710,7 +710,7 @@ void Praser::praser_init_declarator_list(string vartype, struct gramTree* node) 
 		praser_init_declarator(vartype, node->left);
 	}
 
-	if (node->right->name == ",") {
+	if (node->right->name == "COMMA") {
 		praser_init_declarator(vartype, node->right->right);
 	}
 }
@@ -737,7 +737,7 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 		}
 		else {
 			//��������
-			if (declarator->left->right->name == "(") {
+			if (declarator->left->right->name == "LP") {
 				string funcName = declarator->left->left->content;
 				string funcType = vartype;
 				if (blockStack.size() > 1) {
@@ -753,7 +753,7 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 				praser_parameter_list(parameter_list,funcName,false);
 			}
 			//��������
-			else if (declarator->left->right->name == "[") {
+			else if (declarator->left->right->name == "LB") {
 				string arrayName = declarator->left->left->content;
 				string arrayType = vartype;
 				gramTree* assign_exp = declarator->left->right->right;
@@ -819,7 +819,7 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 		}
 	}
 	//�г�ʼ��
-	else if (declarator->right->name == "=") {	
+	else if (declarator->right->name == "ASSIGN") {	
 		//��ȡ����������
 		varNode newvar;
 		if (declarator->left->name == "IDENTIFIER") {
@@ -871,7 +871,7 @@ varNode Praser::praser_assignment_expression(struct gramTree* assign_exp) {	//�
 		varNode node1 = praser_unary_expression(unary_exp);
 		varNode node2 = praser_assignment_expression(next_assign_exp);
 		varNode node3;
-		if (op == "=") {
+		if (op == "ASSIGN") {
 			node3 = node2;
 		}
 		else {
@@ -1082,9 +1082,9 @@ varNode Praser::praser_equality_expression(struct gramTree* equality_exp) {
 		gramTree* relational_exp = equality_exp->left;
 		return praser_relational_expression(relational_exp);
 	}
-	else if (equality_exp->left->right->name == "EQ_OP" || equality_exp->left->right->name == "NE_OP") {
+	else if (equality_exp->left->right->name == "EQ" || equality_exp->left->right->name == "NE") {
 		string op;
-		if (equality_exp->left->right->name == "EQ_OP")
+		if (equality_exp->left->right->name == "EQ")
 			op = "==";
 		else op = "!=";
 
@@ -1115,11 +1115,11 @@ varNode Praser::praser_relational_expression(struct gramTree* relational_exp) {
 	}
 	else {
 		string op = relational_exp->left->right->name;
-		if (op == "LE_OP")
+		if (op == "LE")
 			op = "<=";
-		else if (op == "GE_OP")
+		else if (op == "GE")
 			op = ">=";
-		if (op == ">" || op == "<" || op == ">=" || op == "<=") {
+		if (op == "GT" || op == "LT" || op == ">=" || op == "<=") {
 			varNode node1 = praser_relational_expression(relational_exp->left);
 			varNode node2 = praser_shift_expression(relational_exp->left->right->right);
 
@@ -1146,9 +1146,9 @@ varNode Praser::praser_shift_expression(struct gramTree*shift_exp) {
 		gramTree* additive_exp = shift_exp->left;
 		return praser_additive_expression(additive_exp);
 	}
-	else if (shift_exp->left->right->name == "LEFT_OP" || shift_exp->left->right->name == "RIGHT_OP") {
+	else if (shift_exp->left->right->name == "LEFT" || shift_exp->left->right->name == "RIGHT") {
 		string op;
-		if (shift_exp->left->right->name == "LEFT_OP") {
+		if (shift_exp->left->right->name == "LEFT") {
 			op = "<<";
 		}
 		else op = ">>";
@@ -1177,7 +1177,7 @@ varNode Praser::praser_additive_expression(struct gramTree* additive_exp) {
 		gramTree* mult_exp = additive_exp->left;
 		return praser_multiplicative_expression(mult_exp);
 	}
-	else if (additive_exp->left->right->name == "+" || additive_exp->left->right->name == "-") {
+	else if (additive_exp->left->right->name == "PLUS" || additive_exp->left->right->name == "MINUS") {
 		varNode node1 = praser_additive_expression(additive_exp->left);
 		varNode node2 = praser_multiplicative_expression(additive_exp->left->right->right);
 
@@ -1201,8 +1201,8 @@ varNode Praser::praser_multiplicative_expression(struct gramTree* mult_exp) {
 		gramTree* unary_exp = mult_exp->left;
 		return praser_unary_expression(unary_exp);
 	}
-	else if (mult_exp->left->right->name == "*" || mult_exp->left->right->name == "/" || 
-		mult_exp->left->right->name == "%") {
+	else if (mult_exp->left->right->name == "MUL" || mult_exp->left->right->name == "DIV" || 
+		mult_exp->left->right->name == "PERCENT") {
 		varNode node1 = praser_multiplicative_expression(mult_exp->left);
 		varNode node2 = praser_unary_expression(mult_exp->left->right->right);
 
@@ -1226,7 +1226,7 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 		gramTree* post_exp = unary_exp->left;
 		return praser_postfix_expression(post_exp);
 	}
-	else if (unary_exp->left->name == "INC_OP") {
+	else if (unary_exp->left->name == "INC") {
 		varNode rnode = praser_unary_expression(unary_exp->left->right);
 		if (rnode.type != "int")
 			error(unary_exp->left->right->line, "++ operation can only use for int type.");
@@ -1249,7 +1249,7 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 		return rnode;
 
 	}
-	else if (unary_exp->left->name == "DEC_OP") {
+	else if (unary_exp->left->name == "DEC") {
 
 		varNode rnode = praser_unary_expression(unary_exp->left->right);
 		if (rnode.type != "int")
@@ -1275,13 +1275,13 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 	else if (unary_exp->left->name == "unary_operator") {
 		string op = unary_exp->left->left->name;
 		varNode rnode = praser_unary_expression(unary_exp->left->right);
-		if (op == "+") {
+		if (op == "PLUS") {
 
 			if (rnode.type != "int" && rnode.type != "double")
 				error(unary_exp->left->left->line, "operator '+' can only used to int or double");
 			return rnode;
 		}
-		else if (op == "-") {
+		else if (op == "MINUS") {
 
 			if (rnode.type != "int" && rnode.type != "double")
 				error(unary_exp->left->left->line, "operator '-' can only used to int or double");
@@ -1306,10 +1306,10 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 			}
 			return newnode;
 		}
-		else if (op == "~") {
+		else if (op == "TILDE") {
 
 		}
-		else if (op == "!") {
+		else if (op == "EXCLAMATION") {
 
 		}
 	}
@@ -1321,7 +1321,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 		gramTree* primary_exp = post_exp->left;
 		return praser_primary_expression(primary_exp);
 	}
-	else if (post_exp->left->right->name == "[") {
+	else if (post_exp->left->right->name == "LB") {
 		//�������
 		string arrayName = post_exp->left->left->left->content;
 		gramTree* expression = post_exp->left->right->right;
@@ -1381,7 +1381,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 		innerCode.addCode(tempName + " := &" + innerCode.getarrayNodeName(anode) + " + " + innerCode.getNodeName(enode));
 		return tempVar;
 	}
-	else if (post_exp->left->right->name == "(") {
+	else if (post_exp->left->right->name == "LP") {
 		//��������
 		string funcName = post_exp->left->left->left->content;
 		varNode newNode;
@@ -1414,7 +1414,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 		}
 		return newNode;
 	}
-	else if (post_exp->left->right->name == "INC_OP") {
+	else if (post_exp->left->right->name == "INC") {
 		varNode rnode = praser_postfix_expression(post_exp->left);
 
 		if (rnode.type != "int")
@@ -1444,7 +1444,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 
 		return newnode;
 	}
-	else if (post_exp->left->right->name == "DEC_OP") {
+	else if (post_exp->left->right->name == "DEC") {
 
 		varNode rnode = praser_postfix_expression(post_exp->left);
 
@@ -1546,7 +1546,7 @@ varNode Praser::praser_primary_expression(struct gramTree* primary_exp) {
 		innerCode.addCode(tempname + " := F" + content);
 		return newNode;
 	}
-	else if (primary_exp->left->name == "(") {
+	else if (primary_exp->left->name == "LP") {
 		struct gramTree* expression = primary_exp->left->right;
 		return praser_expression(expression);
 	}
