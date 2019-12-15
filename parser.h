@@ -1,39 +1,34 @@
-#ifndef _PRASER_H_
-#define _PRASER_H_
+#ifndef _PARSER_H_
+#define _PARSER_H_
 #include "stmt.h"
 #include "tree.h"
 #include "ir.h"
 #include <vector>
 #include <set>
 
-
 using namespace std;
 
 class Praser {
 public:
-
-	Praser(gramTree*);	//���캯��
-	~Praser();	//��������
-
+	Praser(gramTree*);
+	~Praser();
 private:
-	map<string, funcNode> funcPool;			//������
-	vector<Block> blockStack;				//ά����ջ
-	InnerCode innerCode;					//�м�������ɹ���
-	//set<string> build_in_function;
+	map<string, funcNode> funcPool;
+	vector<Block> blockStack;
+	InnerCode innerCode;
 
 	struct gramTree* root;
 
 	void praserInit();
 	void praserGramTree(struct gramTree* node);
-
 	
-	struct gramTree* praser_declaration(struct gramTree* node);		//����praser_declaration�Ľڵ�
+	struct gramTree* praser_declaration(struct gramTree* node);
 	void praser_init_declarator_list(string, struct gramTree*);
-	void praser_init_declarator(string, struct gramTree* );			//����praser_init_declarator�Ľڵ�
+	void praser_init_declarator(string, struct gramTree* );
 
 	struct gramTree* praser_function_definition(struct gramTree*);
-	void praser_parameter_list(struct gramTree*,string,bool);			//��ȡ�����β��б�
-	void praser_parameter_declaration(struct gramTree*, string,bool);	//��ȡ���������β�
+	void praser_parameter_list(struct gramTree*,string,bool);
+	void praser_parameter_declaration(struct gramTree*, string,bool);
 
 	struct gramTree* praser_statement(struct gramTree*);
 
@@ -47,9 +42,9 @@ private:
 	void praser_selection_statement(struct gramTree*);
 	void praser_iteration_statement(struct gramTree*);
 
-	varNode praser_assignment_expression(struct gramTree*);			//��ֵ����ʽ
-	varNode praser_logical_or_expression(struct gramTree*);			//�߼������ʽ
-	varNode praser_logical_and_expression(struct gramTree*);		//�߼������ʽ
+	varNode praser_assignment_expression(struct gramTree*);
+	varNode praser_logical_or_expression(struct gramTree*);
+	varNode praser_logical_and_expression(struct gramTree*);
 	varNode praser_inclusive_or_expression(struct gramTree*);
 	varNode praser_exclusive_or_expression(struct gramTree*);
 	varNode praser_and_expression(struct gramTree*);
@@ -63,9 +58,9 @@ private:
 	varNode praser_primary_expression(struct gramTree*);
 
 
-	string lookupVar(string name);			//���ر������ͣ��Ҳ�������""
-	bool lookupCurruntVar(string name);		//���ҵ�ǰ���var
-	struct varNode lookupNode(string name);	//���ر����ڵ�
+	string lookupVar(string name);
+	bool lookupCurruntVar(string name);
+	struct varNode lookupNode(string name);
 	string getFuncRType();
 	string getArrayType(string);
 	struct arrayNode getArrayNode(string);
@@ -74,13 +69,10 @@ private:
 
 	struct varNode createTempVar(string name, string type);
 
-	void error(int line, string error);
+	void error(int type, int line, string error);
 
 	void print_map();
 	void print_code();
 };
 
-
-
-
-#endif // !_PRASER_H_
+#endif

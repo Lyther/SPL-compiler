@@ -76,7 +76,7 @@ void Praser::praser_jump_statement(struct gramTree* node) {
 	} else if (node->left->name == "BREAK") {
 		int num = getBreakBlockNumber();
 		if (num < 0) {
-			error(node->left->line, "This scope doesn't support break.");
+			error(16, node->left->line, "this scope doesn't support break");
 		}
 		innerCode.addCode("GOTO " + blockStack[num].breakLabelname);
 	} else if (node->left->name == "RETURN") {
@@ -85,12 +85,12 @@ void Praser::praser_jump_statement(struct gramTree* node) {
 			varNode rnode = praser_expression(node->left->right);
 			innerCode.addCode(innerCode.createCodeforReturn(rnode));
 			if (rnode.type != funcType) {
-				error(node->left->right->line, "return type doesn't equal to function return type.");
+				error(8, node->left->right->line, "the function’s return value type mismatches the declared type");
 			}
 		} else if (node->left->right->name == "SEMI"){
 			innerCode.addCode("RETURN");
 			if (funcType != "void") {
-				error(node->left->right->line, "You should return " + blockStack.back().func.rtype);
+				error(17, node->left->right->line, "return type " + blockStack.back().func.rtype + " is required");
 			}
 		}
 	}
@@ -393,7 +393,7 @@ struct gramTree* Praser::praser_function_definition(struct gramTree* node) {
 	funcNode declarFunc;
 	if (funcPool.find(funcName) != funcPool.end()) {
 		if (funcPool[funcName].isdefinied) {
-			error(declarator->left->left->line, "Function " + funcName + " is duplicated definition.");
+			error(4, declarator->left->left->line, "function " + funcName + " is redefined");
 		}
 		else {
 			isdeclared = true;
@@ -409,20 +409,20 @@ struct gramTree* Praser::praser_function_definition(struct gramTree* node) {
 	blockStack.push_back(funBlock);
 	funcPool.insert({funcName,funBlock.func});
 	innerCode.addCode("FUNCTION " + funcName + " :");
-	if(declarator->left->right->right->name == "parameter_list")
+	if (declarator->left->right->right->name == "parameter_list")
 		praser_parameter_list(declarator->left->right->right, funcName,true);
 	funcNode func = funcPool[funcName];
 	if (isdeclared) {
 		if (func.rtype != declarFunc.rtype) {
-			error(type_specifier->left->line, "Function return type doesn't equal to the function declared before.");
+			error(8, type_specifier->left->line, "the function’s return value type mismatches the declared type");
 		}
 		cout << funBlock.func.paralist.size() << endl;
 		if (func.paralist.size() != declarFunc.paralist.size()) {
-			error(declarator->left->right->right->line, "The number of function parameters doesn't equal to the function declared before.");
+			error(18, declarator->left->right->right->line, "the function has incorrect number of parameters");
 		}
 		for (int i = 0; i < funBlock.func.paralist.size(); i++) {
 			if (func.paralist[i].type != declarFunc.paralist[i].type)
-				error(declarator->left->right->right->line, "The parameter " + funBlock.func.paralist[i].name + "'s type doesn't equal to the function declared before." );
+				error(19, declarator->left->right->right->line, "the parameter " + funBlock.func.paralist[i].name + " has incorrect type" );
 		}
 	}
 	funBlock.func = func;
@@ -447,7 +447,7 @@ void Praser::praser_parameter_declaration(struct gramTree* node, string funcName
 	gramTree* declarator = node->left->right;
 	string typeName = type_specifier->left->content;
 	if (typeName == "void") {
-		error(type_specifier->line, "Void can't definite parameter.");
+		error(20, type_specifier->line, "void cannot be parameter");
 	}
 	string varName = declarator->left->content;
 	varNode newnode;
@@ -459,7 +459,7 @@ void Praser::praser_parameter_declaration(struct gramTree* node, string funcName
 	}
 	funcPool[funcName].paralist.push_back(newnode);
 	blockStack.back().varMap.insert({varName,newnode});
-	if(definite)
+	if (definite)
 		innerCode.addCode(innerCode.createCodeforParameter(newnode));
 }
 
@@ -469,7 +469,7 @@ struct gramTree* Praser::praser_declaration(struct gramTree *node) {
 		return node->right;
 	string vartype = begin->left->content;
 	if (vartype == "void") {
-		error(begin->left->line,"void type can't assign to variable");
+		error(21, begin->left->line,"void type can't assign to variable");
  	}
 	struct gramTree* decl = begin->right;
 	praser_init_declarator_list(vartype, decl);
@@ -499,13 +499,13 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 				newvar.type = vartype;
 				newvar.num = innerCode.varNum++;
 				blockStack.back().varMap.insert({ var,newvar });
-			} else error(declarator->left->line, "Variable multiple declaration.");
+			} else error(3, declarator->left->line, "variable is redefined in the same scope");
 		} else {
 			if (declarator->left->right->name == "LP") {
 				string funcName = declarator->left->left->content;
 				string funcType = vartype;
 				if (blockStack.size() > 1) {
-					error(declarator->left->right->line, "Functinon declaration must at global environment.");
+					error(22, declarator->left->right->line, "nested function is not supported");
 				}
 				gramTree* parameter_list = declarator->left->right->right;
 				funcNode newFunc;
@@ -521,7 +521,7 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 				gramTree* assign_exp = declarator->left->right->right;
 				varNode rnode = praser_assignment_expression(assign_exp);
 				if (rnode.type != "int") {
-					error(declarator->left->right->line,"Array size must be int.");
+					error(12, declarator->left->right->line,"array indexing with non-integer type expression");
 				}
 				varNode tnode;
 				if (arrayType == "int") {
@@ -561,8 +561,8 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 				blockStack.back().arrayMap.insert({ arrayName,anode });
 			}
 		}
-	}
-	else if (declarator->right->name == "ASSIGN") {		varNode newvar;
+	} else if (declarator->right->name == "ASSIGN") {
+		varNode newvar;
 		if (declarator->left->name == "IDENTIFIER") {
 			struct gramTree* id = declarator->left;
 			string var = id->content;
@@ -571,22 +571,21 @@ void Praser::praser_init_declarator(string vartype, struct gramTree* node) {
 				newvar.type = vartype;
 				newvar.num = innerCode.varNum++;
 				blockStack.back().varMap.insert({ var,newvar });
-			} else error(declarator->left->line, "Variable multiple declaration.");
-		} else error(declarator->left->line, "It's not a variable!");
+			} else error(3, declarator->left->line, "variable is redefined in the same scope");
+		} else error(23, declarator->left->line, "is not a variable");
 		gramTree* initializer = declarator->right->right;
 		if (initializer == NULL) {
-			error(declarator->line, "Lack the initializer for variable.");
+			error(24, declarator->line, "use variable before initialization");
 		} else {
 			if (initializer->left->name == "assignment_expression") {
 				varNode rnode = praser_assignment_expression(initializer->left);
 				innerCode.addCode(innerCode.createCodeforAssign(newvar,rnode));
 				string rtype = rnode.type;
 				if (rtype != vartype)
-					error(initializer->left->line, "Wrong type to variable " + declarator->left->content + ": " + 
-					rtype + " to " + vartype);
+					error(5, initializer->left->line, "unmatching types on both sides of assignment operator " + declarator->left->content + ": " + rtype + " to " + vartype);
 			}
 		}
-	} else error(declarator->right->line, "Wrong value to variable");
+	} else error(25, declarator->right->line, "variable access incorrect");
 }
 
 varNode Praser::praser_assignment_expression(struct gramTree* assign_exp) {
@@ -594,7 +593,7 @@ varNode Praser::praser_assignment_expression(struct gramTree* assign_exp) {
 		struct gramTree* logical_or_exp = assign_exp->left;
 		return praser_logical_or_expression(logical_or_exp);
 	}
-	else if(assign_exp->left->name == "unary_expression"){
+	else if (assign_exp->left->name == "unary_expression"){
 		struct gramTree* unary_exp = assign_exp->left;
 		string op = assign_exp->left->right->left->name;
 		struct gramTree* next_assign_exp = assign_exp->left->right->right;
@@ -610,52 +609,52 @@ varNode Praser::praser_assignment_expression(struct gramTree* assign_exp) {
 			blockStack.back().varMap.insert({ tempname,node3 });
 			if (op == "MUL_ASSIGN") { 
 				if (node1.type != node2.type) {
-					error(assign_exp->left->line, "Different type for two variables.");
+					error(5, assign_exp->left->line, "unmatching types on both sides of assignment operator");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "*", node1, node2));
 			} else if (op == "DIV_ASSIGN") { 
 				if (node1.type != node2.type) {
-					error(assign_exp->left->line, "Different type for two variables.");
+					error(5, assign_exp->left->line, "unmatching types on both sides of assignment operator");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "/", node1, node2));
 			} else if (op == "MOD_ASSIGN") { 
 				if (node1.type != "int" || node2.type != "int") {
-					error(assign_exp->left->line, "The two variables must be int.");
+					error(26, assign_exp->left->line, "variable types must be both integer");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "%", node1, node2));
 			} else if (op == "ADD_ASSIGN") { 
 				if (node1.type != node2.type) {
-					error(assign_exp->left->line, "Different type for two variables.");
+					error(5, assign_exp->left->line, "unmatching types on both sides of assignment operator");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "+", node1, node2));
 			} else if (op == "SUB_ASSIGN") { 
 				if (node1.type != node2.type) {
-					error(assign_exp->left->line, "Different type for two variables.");
+					error(5, assign_exp->left->line, "unmatching types on both sides of assignment operator");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "-", node1, node2));
 			} else if (op == "LEFT_ASSIGN") { 
 				if (node1.type != "int" || node2.type != "int") {
-					error(assign_exp->left->line, "The two variables must be int.");
+					error(26, assign_exp->left->line, "variable types must be both integer");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "<<", node1, node2));
 			} else if (op == "RIGHT_ASSIGN") { 
 				if (node1.type != "int" || node2.type != "int") {
-					error(assign_exp->left->line, "The two variables must be int.");
+					error(26, assign_exp->left->line, "variable types must be both integer");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, ">>", node1, node2));
 			} else if (op == "AND_ASSIGN") { 
 				if (node1.type != "int" || node2.type != "int") {
-					error(assign_exp->left->line, "The two variables must be int.");
+					error(26, assign_exp->left->line, "variable types must be both integer");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "&", node1, node2));
 			} else if (op == "XOR_ASSIGN") { 
 				if (node1.type != "int" || node2.type != "int") {
-					error(assign_exp->left->line, "The two variables must be int.");
+					error(26, assign_exp->left->line, "variable types must be both integer");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "^", node1, node2));
 			} else if (op == "OR_ASSIGN") { 
 				if (node1.type != "int" || node2.type != "int") {
-					error(assign_exp->left->line, "The two variables must be int.");
+					error(26, assign_exp->left->line, "variable types must be both integer");
 				}
 				innerCode.addCode(innerCode.createCodeforVar(tempname, "|", node1, node2));
 			}
@@ -666,14 +665,14 @@ varNode Praser::praser_assignment_expression(struct gramTree* assign_exp) {
 }
 
 varNode Praser::praser_logical_or_expression(struct gramTree* logical_or_exp) {
-	if(logical_or_exp->left->name == "logical_and_expression"){
+	if (logical_or_exp->left->name == "logical_and_expression"){
 		struct gramTree* logical_and_exp = logical_or_exp->left;
 		return praser_logical_and_expression(logical_and_exp);
 	} else if (logical_or_exp->left->name == "logical_or_expression") {
 		varNode node1 = praser_logical_or_expression(logical_or_exp->left);
 		varNode node2 = praser_logical_and_expression(logical_or_exp->left->right->right);
 		if (node1.type != "bool" || node2.type != "bool") {
-			error(logical_or_exp->left->right->line, "Logical Or operation should only used to bool. ");
+			error(27, logical_or_exp->left->right->line, "logical or operation can only be used to bool");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -693,7 +692,7 @@ varNode Praser::praser_logical_and_expression(struct gramTree* logical_and_exp) 
 		varNode node1 = praser_logical_and_expression(logical_and_exp->left);
 		varNode node2 = praser_inclusive_or_expression(logical_and_exp->left->right->right);
 		if (node1.type != "bool" || node2.type != "bool") {
-			error(logical_and_exp->left->right->line, "Logical And operation should only used to bool. ");
+			error(28, logical_and_exp->left->right->line, "logical and operation can only be used to bool");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -713,7 +712,7 @@ varNode Praser::praser_inclusive_or_expression(struct gramTree* inclusive_or_exp
 		varNode node1 = praser_inclusive_or_expression(inclusive_or_exp->left);
 		varNode node2 = praser_exclusive_or_expression(inclusive_or_exp->left->right->right);
 		if (node1.type != "int" || node2.type != "int") {
-			error(inclusive_or_exp->left->right->line, "Inclusive Or operation should only used to int. ");
+			error(29, inclusive_or_exp->left->right->line, "inclusive or operation can only be used to int");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -732,7 +731,7 @@ varNode Praser::praser_exclusive_or_expression(struct gramTree *exclusive_or_exp
 		varNode node1 = praser_exclusive_or_expression(exclusive_or_exp->left);
 		varNode node2 = praser_and_expression(exclusive_or_exp->left->right->right);
 		if (node1.type != "int" || node2.type != "int") {
-			error(exclusive_or_exp->left->right->line, "Exclusive Or operation should only used to int. ");
+			error(30, exclusive_or_exp->left->right->line, "exclusive or operation can only be used to int");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -751,7 +750,7 @@ varNode Praser::praser_and_expression(struct gramTree* and_exp) {
 		varNode node1 = praser_and_expression(and_exp->left);
 		varNode node2 = praser_equality_expression(and_exp->left->right->right);
 		if (node1.type != "int" || node2.type != "int") {
-			error(and_exp->left->right->line, "And operation should only used to int. ");
+			error(31, and_exp->left->right->line, "and operation can only be used to int");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -774,7 +773,7 @@ varNode Praser::praser_equality_expression(struct gramTree* equality_exp) {
 		varNode node1 = praser_equality_expression(equality_exp->left);
 		varNode node2 = praser_relational_expression(equality_exp->left->right->right);
 		if (node1.type != node2.type) {
-			error(equality_exp->left->right->line, "Different type for two variables.");
+			error(5, equality_exp->left->right->line, "unmatching types on both sides of assignment operator");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -800,7 +799,7 @@ varNode Praser::praser_relational_expression(struct gramTree* relational_exp) {
 			varNode node1 = praser_relational_expression(relational_exp->left);
 			varNode node2 = praser_shift_expression(relational_exp->left->right->right);
 			if (node1.type != node2.type) {
-				error(relational_exp->left->right->line, "Different type for two variables.");
+				error(5, relational_exp->left->right->line, "unmatching types on both sides of assignment operator");
 			}
 			string tempname = "t" + inttostr(innerCode.tempNum);
 			++innerCode.tempNum;
@@ -825,7 +824,7 @@ varNode Praser::praser_shift_expression(struct gramTree*shift_exp) {
 		varNode node1 = praser_shift_expression(shift_exp->left);
 		varNode node2 = praser_additive_expression(shift_exp->left->right->right);
 		if (node1.type != "int" || node2.type != "int" ) {
-			error(shift_exp->left->right->line, "Shift operation should only used to int. ");
+			error(32, shift_exp->left->right->line, "shift operation can only be used to int");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -844,7 +843,7 @@ varNode Praser::praser_additive_expression(struct gramTree* additive_exp) {
 		varNode node1 = praser_additive_expression(additive_exp->left);
 		varNode node2 = praser_multiplicative_expression(additive_exp->left->right->right);
 		if (node1.type != node2.type) {
-			error(additive_exp->left->right->line, "Different type for two variables.");
+			error(5, additive_exp->left->right->line, "unmatching types on both sides of assignment operator");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -864,7 +863,7 @@ varNode Praser::praser_multiplicative_expression(struct gramTree* mult_exp) {
 		varNode node1 = praser_multiplicative_expression(mult_exp->left);
 		varNode node2 = praser_unary_expression(mult_exp->left->right->right);
 		if (node1.type != node2.type) {
-			error(mult_exp->left->right->line, "Different type for two variables.");
+			error(5, mult_exp->left->right->line, "unmatching types on both sides of assignment operator");
 		}
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -882,7 +881,7 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 	} else if (unary_exp->left->name == "INC") {
 		varNode rnode = praser_unary_expression(unary_exp->left->right);
 		if (rnode.type != "int")
-			error(unary_exp->left->right->line, "++ operation can only use for int type.");
+			error(33, unary_exp->left->right->line, "++ operation can only be used to int");
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
 		varNode newNode = createTempVar(tempname, "int");
@@ -897,7 +896,7 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 	} else if (unary_exp->left->name == "DEC") {
 		varNode rnode = praser_unary_expression(unary_exp->left->right);
 		if (rnode.type != "int")
-			error(unary_exp->left->right->line, "-- operation can only use for int type.");
+			error(34, unary_exp->left->right->line, "-- operation can only be used to int");
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
 		varNode newNode = createTempVar(tempname, "int");
@@ -914,11 +913,11 @@ varNode Praser::praser_unary_expression(struct gramTree*unary_exp) {
 		varNode rnode = praser_unary_expression(unary_exp->left->right);
 		if (op == "PLUS") {
 			if (rnode.type != "int" && rnode.type != "double")
-				error(unary_exp->left->left->line, "operator '+' can only used to int or double");
+				error(35, unary_exp->left->left->line, "operator '+' can only be used to int or double");
 			return rnode;
 		} else if (op == "MINUS") {
 			if (rnode.type != "int" && rnode.type != "double")
-				error(unary_exp->left->left->line, "operator '-' can only used to int or double");
+				error(36, unary_exp->left->left->line, "operator '-' can only be used to int or double");
 			string tempzeroname = "t" + inttostr(innerCode.tempNum);
 			++innerCode.tempNum;
 			varNode newzeronode = createTempVar(tempzeroname, rnode.type);
@@ -950,7 +949,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 		varNode enode = praser_expression(expression);
 		arrayNode anode = getArrayNode(arrayName);
 		if (anode.num < 0)
-			error(post_exp->left->right->line, "Undifined array " + arrayName);
+			error(1, post_exp->left->right->line, "variable " + arrayName + " is used without definition");
 		varNode tempVar;
 		string tempName = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
@@ -993,7 +992,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 		string funcName = post_exp->left->left->left->content;
 		varNode newNode;
 		if (funcPool.find(funcName) == funcPool.end()) {
-			error(post_exp->left->left->left->line, "Undefined function " + funcName);
+			error(2, post_exp->left->left->left->line, "function is invoked without definition " + funcName);
 		}
 		if (post_exp->left->right->right->name == "argument_expression_list") {
 			gramTree* argument_exp_list = post_exp->left->right->right;
@@ -1018,7 +1017,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 	} else if (post_exp->left->right->name == "INC") {
 		varNode rnode = praser_postfix_expression(post_exp->left);
 		if (rnode.type != "int")
-			error(post_exp->left->right->line, "++ operation can only use for int type.");
+			error(33, post_exp->left->right->line, "++ operation can only be used to int");
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
 		varNode newnode = createTempVar(tempname, "int");
@@ -1039,7 +1038,7 @@ varNode Praser::praser_postfix_expression(struct gramTree* post_exp) {
 	} else if (post_exp->left->right->name == "DEC") {
 		varNode rnode = praser_postfix_expression(post_exp->left);
 		if (rnode.type != "int")
-			error(post_exp->left->right->line, "-- operation can only use for int type.");
+			error(34, post_exp->left->right->line, "-- operation can only be used to int");
 		string tempname = "t" + inttostr(innerCode.tempNum);
 		++innerCode.tempNum;
 		varNode newnode = createTempVar(tempname, "int");
@@ -1070,17 +1069,17 @@ void Praser::praser_argument_expression_list(struct gramTree* node, string funcN
 		argu_exp_list = argu_exp_list->left;
 		i++;
 		if (func.paralist[func.paralist.size() - i].type != rnode.type) {
-			error(argu_exp_list->line, "Wrong type arguments to function " + funcName);
+			error(19, argu_exp_list->line, "the parameter " + func.paralist[func.paralist.size() - i].name + " has incorrect type");
 		}
 	}
 	varNode rnode = praser_assignment_expression(argu_exp_list);
 	innerCode.addCode(innerCode.createCodeforArgument(rnode, funcName));
 	i++;
 	if (func.paralist[func.paralist.size() - i].type != rnode.type) {
-		error(argu_exp_list->line, "Wrong type arguments to function " + funcName);
+		error(19, argu_exp_list->line, "the parameter " + func.paralist[func.paralist.size() - i].name + " has incorrect type");
 	}
 	if (i != func.paralist.size()) {
-		error(argu_exp_list->line, "The number of arguments doesn't equal to the function parameters number.");
+		error(18, argu_exp_list->line, "the function has incorrect number of parameters");
 	}
 }
 
@@ -1089,7 +1088,7 @@ varNode Praser::praser_primary_expression(struct gramTree* primary_exp) {
 		string content = primary_exp->left->content;
 		varNode rnode = lookupNode(content);
 		if (rnode.num < 0) {
-			error(primary_exp->left->line, "Undefined variable " + content);
+			error(1, primary_exp->left->line, "variable " + content + " is used without definition");
 		}
 		return rnode;
 	} else if (primary_exp->left->name == "TRUE" || primary_exp->left->name == "FALSE") {
@@ -1098,7 +1097,7 @@ varNode Praser::praser_primary_expression(struct gramTree* primary_exp) {
 		++innerCode.tempNum;
 		varNode newNode = createTempVar(tempname, "bool");
 		blockStack.back().varMap.insert({ tempname,newNode });
-		if(primary_exp->left->name == "TRUE") 
+		if (primary_exp->left->name == "TRUE") 
 			innerCode.addCode(tempname + " := #1");
 		else {
 			innerCode.addCode(tempname + " := #0");
@@ -1188,11 +1187,10 @@ int Praser::getBreakBlockNumber() {
 	return -1;
 }
 
-void Praser::error(int line, string error) {
+void Praser::error(int type, int line, string error) {
 	print_code();
-	cout << "Error! line " << line << ": ";
-	cout << error << endl;
-	exit(1);
+	cout << "Error type " << type << " at Line " << line << ": " << error << endl;
+	exit(-1);
 }
 
 struct varNode Praser::createTempVar(string name, string type) {
