@@ -1,0 +1,9 @@
+FUNCTION main :
+t1 := #3
+v1 := t1
+t2 := #1
+t3 := v1 << t2
+v1 := t3
+WRITE v1
+t4 := #0
+RETURN t4
