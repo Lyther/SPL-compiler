@@ -25,8 +25,8 @@
 }
 
 %token <gt> IDENTIFIER CONSTANT STRING_LITERAL SIZEOF CONSTANT_INT CONSTANT_DOUBLE
-%token <gt> PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-%token <gt> AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+%token <gt> PTR INC DEC LEFT RIGHT LE GE EQ NE
+%token <gt> AND OR MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token <gt> SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
 %token <gt> XOR_ASSIGN OR_ASSIGN TYPE_NAME
 
@@ -73,8 +73,8 @@ postfix_expression: primary_expression { $$ = create_tree("postfix_expression", 
 	| postfix_expression '[' expression ']' { $$ = create_tree("postfix_expression", 4, $1, $2, $3, $4); }
 	| postfix_expression '(' ')' { $$ = create_tree("postfix_expression", 3, $1, $2, $3); }
 	| postfix_expression '(' argument_expression_list ')' { $$ = create_tree("postfix_expression", 4, $1, $2, $3, $4); }
-	| postfix_expression INC_OP { $$ = create_tree("postfix_expression", 2, $1, $2); }
-	| postfix_expression DEC_OP { $$ = create_tree("postfix_expression", 2, $1, $2); }
+	| postfix_expression INC { $$ = create_tree("postfix_expression", 2, $1, $2); }
+	| postfix_expression DEC { $$ = create_tree("postfix_expression", 2, $1, $2); }
 	;
 
 argument_expression_list: assignment_expression { $$ = create_tree("argument_expression_list", 1, $1); }
@@ -82,8 +82,8 @@ argument_expression_list: assignment_expression { $$ = create_tree("argument_exp
 	;
 
 unary_expression: postfix_expression { $$ = create_tree("unary_expression", 1, $1); }
-	| INC_OP unary_expression { $$ = create_tree("unary_expression", 2, $1, $2); }
-	| DEC_OP unary_expression { $$ = create_tree("unary_expression", 2, $1, $2); }
+	| INC unary_expression { $$ = create_tree("unary_expression", 2, $1, $2); }
+	| DEC unary_expression { $$ = create_tree("unary_expression", 2, $1, $2); }
 	| unary_operator unary_expression { $$ = create_tree("unary_expression", 2, $1, $2); }
 	;
 
@@ -105,20 +105,20 @@ additive_expression: multiplicative_expression { $$ = create_tree("additive_expr
 	;
 
 shift_expression: additive_expression { $$ = create_tree("shift_expression", 1, $1); }
-	| shift_expression LEFT_OP additive_expression { $$ = create_tree("shift_expression", 3, $1, $2, $3); }
-	| shift_expression RIGHT_OP additive_expression { $$ = create_tree("shift_expression", 3, $1, $2, $3); }
+	| shift_expression LEFT additive_expression { $$ = create_tree("shift_expression", 3, $1, $2, $3); }
+	| shift_expression RIGHT additive_expression { $$ = create_tree("shift_expression", 3, $1, $2, $3); }
 	;
 
 relational_expression: shift_expression { $$ = create_tree("relational_expression", 1, $1); }
 	| relational_expression '<' shift_expression { $$ = create_tree("relational_expression", 3, $1, $2, $3); }
 	| relational_expression '>' shift_expression { $$ = create_tree("relational_expression", 3, $1, $2, $3); }
-	| relational_expression LE_OP shift_expression { $$ = create_tree("relational_expression", 3, $1, $2, $3); }
-	| relational_expression GE_OP shift_expression { $$ = create_tree("relational_expression", 3, $1, $2, $3); }
+	| relational_expression LE shift_expression { $$ = create_tree("relational_expression", 3, $1, $2, $3); }
+	| relational_expression GE shift_expression { $$ = create_tree("relational_expression", 3, $1, $2, $3); }
 	;
 
 equality_expression: relational_expression { $$ = create_tree("equality_expression", 1, $1); }
-	| equality_expression EQ_OP relational_expression { $$ = create_tree("equality_expression", 3, $1, $2, $3); }
-	| equality_expression NE_OP relational_expression { $$ = create_tree("equality_expression", 3, $1, $2, $3); }
+	| equality_expression EQ relational_expression { $$ = create_tree("equality_expression", 3, $1, $2, $3); }
+	| equality_expression NE relational_expression { $$ = create_tree("equality_expression", 3, $1, $2, $3); }
 	;
 
 and_expression: equality_expression { $$ = create_tree("and_expression", 1, $1); }
@@ -134,11 +134,11 @@ inclusive_or_expression: exclusive_or_expression { $$ = create_tree("inclusive_o
 	;
 
 logical_and_expression: inclusive_or_expression { $$ = create_tree("logical_and_expression", 1, $1); }
-	| logical_and_expression AND_OP inclusive_or_expression { $$ = create_tree("logical_and_expression", 3, $1, $2, $3); }
+	| logical_and_expression AND inclusive_or_expression { $$ = create_tree("logical_and_expression", 3, $1, $2, $3); }
 	;
 
 logical_or_expression: logical_and_expression { $$ = create_tree("logical_or_expression", 1, $1); }
-	| logical_or_expression OR_OP logical_and_expression { $$ = create_tree("logical_or_expression", 3, $1, $2, $3); }
+	| logical_or_expression OR logical_and_expression { $$ = create_tree("logical_or_expression", 3, $1, $2, $3); }
 	;
 
 assignment_expression: logical_or_expression { $$ = create_tree("assignment_expression", 1, $1); }
