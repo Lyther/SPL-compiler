@@ -1,8 +1,0 @@
-int main() {
-	while (1) {
-		int n = read();
-		if (n > 100) continue;
-		break;
-	}
-	return 0;
-}

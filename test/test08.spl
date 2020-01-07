@@ -1,8 +1,0 @@
-int main() {
-	int a = 1;
-	a++;
-	write(a);
-	a--;
-	write(a);
-	return 0;
-}

@@ -1,3 +1,0 @@
-FUNCTION add :
-PARAM v1
-Error type 1 at Line 3: variable temp is used without definition

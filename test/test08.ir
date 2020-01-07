@@ -1,9 +1,0 @@
-FUNCTION main :
-t1 := #1
-v1 := t1
-v1 := v1 + t1
-WRITE v1
-v1 := v1 - t1
-WRITE v1
-t6 := #0
-RETURN t6

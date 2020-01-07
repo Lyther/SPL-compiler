@@ -1,0 +1,5 @@
+.idea/
+cmake-build-debug/
+mips/cmake-build-debug/
+mips/venv/
+mips/CMakeLists.txt

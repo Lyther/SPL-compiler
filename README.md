@@ -8,6 +8,7 @@ Already finished part:
 * Syntax analysis
 * Intermediate code generation
 * Intermediate code optimization
+* MIPS machine code generation
 
 Now, the output file is the IR code in test/ folder.
 
@@ -23,12 +24,15 @@ Use `./bin/splc <input .spl file>` to generate IR code for source .sql code.
 
 The output .ir file would have the same name as the .sql code, and in the same folder, as well.
 
+If you've finished the intermediate part, you can then generate MIPS machine code using machine code generator provided in mips/ folder. The usage would be very similar to previous steps, simply run `make splc` and then use `./bin/splc <input .ir file>` would be fine.
+
 ## Requirements
 
 To compile splc program, you need:
 * Lex or Flex
 * Yacc or Bison
 * G++ at least support C++ 11 standard
+* Python version 3
 
 ## Appendix
 
